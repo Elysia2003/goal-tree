@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="目标树">
+<link rel="manifest" href="manifest.json">
+<title>目标树 2.0</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--text:#172033;--muted:#718096;--line:#e5e7eb;--accent:#2563eb;--soft:#eef4ff;--green:#16a34a;--red:#dc2626;--shadow:0 4px 18px rgba(15,23,42,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.app{min-height:100vh}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.top{max-width:1100px;margin:auto;padding:13px 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{font-size:21px;font-weight:800}.subtitle{font-size:12px;color:var(--muted);margin-top:2px}.primary{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700}
+nav{max-width:1100px;margin:auto;display:flex;padding:0 10px;overflow:auto}.tab{border:0;background:transparent;padding:12px 15px;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent}.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+main{max-width:1100px;margin:20px auto;padding:0 16px 40px}.page{display:none}.page.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:var(--shadow)}.card b{font-size:24px;display:block}.card span{font-size:12px;color:var(--muted)}
+.hero{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}.hero h2{margin:0 0 6px}.hero p{margin:0;color:var(--muted);font-size:13px}.bar{height:9px;background:#edf0f3;border-radius:99px;overflow:hidden;margin:14px 0 7px}.fill{height:100%;background:var(--accent);border-radius:99px}.hero-foot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 9px}.section-title h3{margin:0;font-size:15px}
+.list{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.item{padding:14px 15px;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item-head{display:flex;align-items:center;gap:8px}.name{font-weight:650;flex:1}.meta{font-size:12px;color:var(--muted);margin-top:5px}.actions{display:flex;gap:6px;margin-top:9px}.small{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 9px;font-size:12px}.small.blue{color:var(--accent);background:var(--soft);border-color:#d8e5ff}.small.red{color:var(--red)}
+.badge{font-size:11px;padding:4px 7px;border-radius:99px;background:#f1f5f9;color:#475569}.badge.done{background:#dcfce7;color:#166534}.badge.over{background:#fee2e2;color:#991b1b}
+.tree{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.tree-row{padding:13px 12px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(220px,1fr) 100px 105px 125px auto;gap:8px;align-items:center}.tree-row:last-child{border:0}.tree-name{min-width:0}.indent{display:inline-block;width:20px}.toggle{border:0;background:transparent;color:var(--muted);padding:2px}.searchbar{display:flex;gap:8px;margin-bottom:12px}.searchbar input,.searchbar select{padding:10px;border:1px solid var(--line);border-radius:9px;background:#fff}.searchbar input{flex:1}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20;padding:18px;overflow:auto}.modal.show{display:flex;justify-content:center;align-items:flex-start}.dialog{width:min(700px,100%);background:#fff;border-radius:17px;padding:20px;margin-top:25px;box-shadow:0 20px 60px rgba(0,0,0,.2)}.dialog h2{margin:0 0 17px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-size:12px;font-weight:700;display:block;margin-bottom:6px}input,textarea,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#fff}textarea{min-height:85px;resize:vertical}.full{grid-column:1/-1}.footer{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.footer button{padding:9px 13px;border:1px solid var(--line);background:#fff;border-radius:9px}.footer .save{background:var(--accent);color:#fff;border-color:var(--accent)}
+.notice{background:#fff8e7;border:1px solid #f6df9c;padding:12px 14px;border-radius:12px;font-size:12px;color:#795b08;margin-bottom:14px}
+@media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr)}.tree-row{grid-template-columns:1fr auto}.tree-row>.date,.tree-row>.status{display:none}.tree-row>.actions{grid-column:1/-1}.grid{grid-template-columns:1fr}.full{grid-column:auto}.top{padding-left:14px;padding-right:14px}.primary{padding:9px 11px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="top"><div><div class="brand">🌱 目标树 2.0</div><div class="subtitle">把长期目标，拆成真正可以执行的事情</div></div><button class="primary" onclick="openModal()">＋ 新目标</button></div>
+<nav><button class="tab active" data-page="home">仪表盘</button><button class="tab" data-page="tree">目标树</button><button class="tab" data-page="timeline">时间规划</button><button class="tab" data-page="review">复盘</button><button class="tab" data-page="data">数据</button></nav></header>
+<main>
+<section id="home" class="page active">
+<div id="installNotice" class="notice" style="display:none"></div>
+<div class="cards" id="stats"></div>
+<div class="section-title"><h3>当前核心目标</h3><button class="small blue" onclick="setPage('tree')">查看全部</button></div>
+<div id="hero"></div>
+<div class="section-title"><h3>近期目标</h3></div><div class="list" id="upcoming"></div>
+</section>
+<section id="tree" class="page">
+<div class="searchbar"><input id="search" placeholder="搜索目标名称、目标内容或备注" oninput="renderTree()"><select id="filter" onchange="renderTree()"><option value="all">全部</option><option value="active">进行中</option><option value="done">已完成</option><option value="over">已逾期</option></select><button class="small" onclick="expandAll()">全部展开</button><button class="small" onclick="collapseAll()">收起</button></div>
+<div class="tree" id="treeList"></div>
+</section>
+<section id="timeline" class="page"><div class="hero"><h2>时间规划</h2><p>按结束日期查看目标。第二阶段可以继续升级为真正的甘特图。</p></div><div class="list" id="timelineList"></div></section>
+<section id="review" class="page"><div class="hero"><h2>复盘中心</h2><p>完成目标后，记录实际结果与经验，避免只追求“打勾”。</p></div><div class="list" id="reviewList"></div></section>
+<section id="data" class="page"><div class="hero"><h2>数据管理</h2><p>目标数据保存在当前设备的浏览器本地。定期导出备份，换设备时再导入。</p><div class="actions"><button class="small blue" onclick="exportData()">导出 JSON 备份</button><label class="small" style="cursor:pointer">导入 JSON<input hidden type="file" accept=".json" onchange="importData(event)"></label><button class="small red" onclick="clearAll()">清空全部数据</button></div></div>
+<div class="hero"><h2>添加到主屏幕</h2><p><b>Android / Chrome：</b>打开本页面后，菜单 → “添加到主屏幕”或“安装应用”。<br><b>iPad / Safari：</b>打开本页面 → 分享 → “添加到主屏幕”。</p><p style="margin-top:9px">要获得真正的离线安装体验，需要把这三个文件放到同一个 HTTPS 网站上；本地 HTML 文件不能完整模拟 PWA 安装流程。</p></div></section>
+</main>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="dialog"><h2 id="modalTitle">新建目标</h2><form onsubmit="saveGoal(event)"><div class="grid">
+<div class="full"><label>项目名称 *</label><input id="name" required placeholder="例如：成为职业摄影师"></div>
+<div><label>开始日期</label><input id="start" type="date"></div><div><label>结束日期</label><input id="end" type="date"></div>
+<div><label>上级目标</label><select id="parent"><option value="">无（顶层目标）</option></select></div><div><label>状态</label><select id="status"><option value="active">进行中</option><option value="done">按计划完成</option></select></div>
+<div class="full"><label>项目目标</label><textarea id="goal" placeholder="最终要达到什么结果？"></textarea></div><div class="full"><label>备注</label><textarea id="notes" placeholder="方法、资源、关键节点等"></textarea></div>
+<div class="full"><label>复盘</label><textarea id="reviewText" placeholder="完成后记录：实际结果、偏差原因、学到了什么、下一步怎么调整。"></textarea></div>
+</div><div class="footer"><button type="button" onclick="closeModal()">取消</button><button class="save">保存</button></div></form></div></div>
+<script>
+const KEY='goal-tree-2-v1';let data=JSON.parse(localStorage.getItem(KEY)||'[]'),editing=null,expanded=new Set(data.map(x=>x.id));
+const today=()=>new Date().toISOString().slice(0,10),save=()=>localStorage.setItem(KEY,JSON.stringify(data));
+const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function kids(id){return data.filter(x=>x.parent===id)}function overdue(x){return x.status!=='done'&&x.end&&x.end<today()}
+function descendants(id){let a=[id],i=0;while(i<a.length){data.filter(x=>x.parent===a[i]).forEach(x=>a.push(x.id));i++}return a}
+function progress(x){let c=kids(x.id);if(!c.length)return x.status==='done'?100:0;return Math.round(c.reduce((s,a)=>s+progress(a),0)/c.length)}
+function setPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===p));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='tree')renderTree();if(p==='timeline')renderTimeline();if(p==='review')renderReview()}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setPage(b.dataset.page));
+function render(){renderStats();renderHero();renderUpcoming();renderTree();renderTimeline();renderReview()}
+function renderStats(){let t=data.length,d=data.filter(x=>x.status==='done').length,o=data.filter(overdue).length;document.getElementById('stats').innerHTML=`<div class=card><b>${t}</b><span>全部目标</span></div><div class=card><b>${t-d}</b><span>进行中</span></div><div class=card><b>${d}</b><span>已完成</span></div><div class=card><b>${o}</b><span>已逾期</span></div>`}
+function root(){return data.find(x=>!x.parent)||null}
+function renderHero(){let x=root();document.getElementById('hero').innerHTML=x?`<div class=hero><h2>${esc(x.name)}</h2><p>${esc(x.goal||'暂无目标说明')}</p><div class=bar><div class=fill style="width:${progress(x)}%"></div></div><div class=hero-foot><span>总体进度 ${progress(x)}%</span><span>${x.end?'截止 '+x.end:'未设置截止日期'}</span></div></div>`:`<div class=hero><h2>还没有核心目标</h2><p>先创建你的第一个大目标。</p></div>`}
+function renderUpcoming(){let a=data.filter(x=>x.status!=='done').sort((a,b)=>(a.end||'9999').localeCompare(b.end||'9999')).slice(0,5);document.getElementById('upcoming').innerHTML=a.length?a.map(x=>mini(x)).join(''):'<div class=empty>目前没有进行中的目标。</div>'}
+function mini(x){let st=x.status==='done'?'<span class="badge done">完成</span>':overdue(x)?'<span class="badge over">已逾期</span>':'<span class=badge>进行中</span>';return `<div class=item><div class=item-head><span class=name>${esc(x.name)}</span>${st}</div><div class=meta>${x.end?'截止：'+x.end:'未设置截止日期'}${x.goal?' · '+esc(x.goal):''}</div><div class=actions><button class="small" onclick="openModal('${x.id}')">编辑</button><button class="small blue" onclick="addChild('${x.id}')">＋子目标</button></div></div>`}
+function treeRows(){let q=(document.getElementById('search')?.value||'').toLowerCase().trim(),f=document.getElementById('filter')?.value||'all';if(q||f!=='all')return data.filter(x=>(!q||[x.name,x.goal,x.notes].join(' ').toLowerCase().includes(q))&&(f==='all'||(f==='done'&&x.status==='done')||(f==='active'&&x.status!=='done')||(f==='over'&&overdue(x)))).map(x=>[x,0]);let out=[];function walk(p,d){data.filter(x=>(x.parent||'')===(p||'')).forEach(x=>{out.push([x,d]);if(expanded.has(x.id))walk(x.id,d+1)})}walk('',0);return out}
+function renderTree(){let rows=treeRows();document.getElementById('treeList').innerHTML=rows.length?rows.map(([x,d])=>{let c=kids(x.id),st=x.status==='done'?'<span class="badge done">完成</span>':overdue(x)?'<span class="badge over">已逾期</span>':'<span class=badge>进行中</span>';return `<div class=tree-row><div class=tree-name style="padding-left:${d*20}px">${c.length?`<button class=toggle onclick="toggle('${x.id}')">${expanded.has(x.id)?'▾':'▸'}</button>`:'<span class=indent></span>'}<b>${esc(x.name)}</b><div class=meta>${esc(x.goal||'')}</div></div><div class=date>${x.start||'—'}</div><div class=date>${x.end||'—'}</div><div class=status>${st}</div><div class=actions><button class=small onclick="openModal('${x.id}')">编辑</button><button class="small blue" onclick="addChild('${x.id}')">＋子目标</button><button class="small red" onclick="removeGoal('${x.id}')">删除</button></div></div>`}).join(''):'<div class=empty>没有匹配的目标。</div>'}
+function toggle(id){expanded.has(id)?expanded.delete(id):expanded.add(id);renderTree()}function expandAll(){data.forEach(x=>expanded.add(x.id));renderTree()}function collapseAll(){expanded.clear();renderTree()}
+function renderTimeline(){let a=[...data].sort((x,y)=>(x.end||'9999').localeCompare(y.end||'9999'));document.getElementById('timelineList').innerHTML=a.length?a.map(mini).join(''):'<div class=empty>暂无目标。</div>'}
+function renderReview(){let a=data.filter(x=>x.status==='done'||x.review);document.getElementById('reviewList').innerHTML=a.length?a.map(x=>`<div class=item><div class=name">${esc(x.name)}</div><div class=meta">${x.review?esc(x.review):'已完成，但还没有填写复盘。'}</div><div class=actions><button class=small onclick="openModal('${x.id}')">编辑复盘</button></div></div>`).join(''):'<div class=empty>完成目标后，在这里留下复盘记录。</div>'}
+function openModal(id=null,parent=''){editing=id;let x=id?data.find(a=>a.id===id):{name:'',start:'',end:'',parent,status:'active',goal:'',notes:'',review:''};document.getElementById('modalTitle').textContent=id?'编辑目标':'新建目标';for(let k of ['name','start','end','status','goal','notes','reviewText'])document.getElementById(k).value=k==='reviewText'?(x.review||''):(x[k]||'');let s=document.getElementById('parent');s.innerHTML='<option value="">无（顶层目标）</option>'+data.filter(a=>a.id!==id&&!descendants(id||'').includes(a.id)).map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');s.value=x.parent||parent||'';document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show');editing=null}
+function addChild(id){expanded.add(id);openModal(null,id)}
+function saveGoal(e){e.preventDefault();let o={id:editing||crypto.randomUUID(),name:name.value.trim(),start:start.value,end:end.value,parent:parent.value,status:status.value,goal:goal.value.trim(),notes:notes.value.trim(),review:reviewText.value.trim()};if(editing){let i=data.findIndex(x=>x.id===editing);data[i]={...data[i],...o}}else data.push(o);save();closeModal();render()}
+function removeGoal(id){let n=data.find(x=>x.id===id)?.name;if(confirm(`删除「${n}」及其所有子目标？`)){let ids=descendants(id);data=data.filter(x=>!ids.includes(x.id));save();render()}}
+function exportData(){let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='目标树2.0-备份.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!Array.isArray(x))throw 0;if(confirm('导入会覆盖当前数据，确定？')){data=x;save();render()}}catch{alert('文件格式不正确')}};r.readAsText(f)}
+function clearAll(){if(confirm('确定清空所有目标？此操作不可恢复，请先导出备份。')){data=[];save();render()}}
+if('serviceWorker' in navigator && location.protocol!=='file:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();
+</script>
+</body></html>
